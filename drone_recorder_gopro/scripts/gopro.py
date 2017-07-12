@@ -70,16 +70,22 @@ if __name__ == '__main__':
             try:
                 recording(False)
             except Exception as e:
-                return SetBoolResponse(False, 'Unable to stop recording: ' + e)
+                return SetBoolResponse(False, 'Unable to stop recording: {0}'.format(e))
 
             thumbhash = ''
             try:
                 m = medias()[-1]
+                msg = String()
+
                 thumbhash = ipfsPublish(getThumb(m))
-                thumbnail.publish(thumbhash)
-                video.publish(ipfsPublish(getVideo(m)))
+                msg.data = thumbhash
+                thumbnail.publish(msg)
+
+                videohash = ipfsPublish(getVideo(m))
+                msg.data = videohash
+                video.publish(msg)
             except Exception as e:
-                return SetBoolResponse(False, 'Unable to publish media: ' + e)
+                return SetBoolResponse(False, 'Unable to publish media: {0}'.format(e))
 
             return SetBoolResponse(True, thumbhash)
 
