@@ -1,16 +1,14 @@
 #!/usr/bin/env python
-urlopen = {}
+import rospy, json, ipfsapi
+from goprohero import GoProHero
+
+urlopen = lambda x: x
 try:
-    # Python 2
     import urllib2
     urlopen = urllib2.urlopen
 except:
-    # Python 3
     import urllib.request
     urlopen = urllib.request.urlopen
-
-import rospy, json, ipfsapi
-ipfs = ipfsapi.connect('127.0.0.1', 5001)
 
 def medias():
     '''
@@ -40,17 +38,15 @@ def getThumb(media):
 
 def recording(enable):
     rospy.loginfo('Set video enable {0}'.format(enable))
-    url = 'http://10.5.5.9/gp/gpControl/setting/10/0' 
-    if enable:
-        url = 'http://10.5.5.9/gp/gpControl/setting/10/1'
-    urlopen(url).read()
+    camera = GoProHero(password='password')
+    camera.command('record', 'on' if enable else 'off')
 
 def ipfsPublish(data):
     '''
         Publish bytes by IPFS client
     '''
     rospy.loginfo('IPFS publish data length {0}'.format(len(data)))
-    return ipfs.add_bytes(data)
+    return ipfsapi.connect('127.0.0.1', 5001).add_bytes(data)
 
 if __name__ == '__main__':
     rospy.init_node('drone_recorder_gopro')

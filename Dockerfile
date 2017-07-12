@@ -1,6 +1,6 @@
 FROM ros:kinetic-ros-base
 
-RUN apt-get update && apt-get install -y wget sudo python-yaml python-pip && pip install ipfsapi
+RUN apt-get update && apt-get install -y wget sudo python-yaml python-pip && pip install ipfsapi goprohero
 RUN wget --no-check-certificate -O - -q https://dist.ipfs.io/ipfs-update/v1.5.2/ipfs-update_v1.5.2_linux-amd64.tar.gz | tar xzv ipfs-update && ./ipfs-update/ipfs-update install latest 
 
 ADD ./drone_recorder_gopro /tmp/build/src/drone_recorder_gopro
