@@ -69,8 +69,8 @@ if __name__ == '__main__':
             # Stop recording and publish thumbnail & video files
             try:
                 recording(False)
-            except:
-                return SetBoolResponse(False, 'Unable to stop recording')
+            except Exception as e:
+                return SetBoolResponse(False, 'Unable to stop recording: ' + e)
 
             thumbhash = ''
             try:
@@ -78,8 +78,8 @@ if __name__ == '__main__':
                 thumbhash = ipfsPublish(getThumb(m))
                 thumbnail.publish(thumbhash)
                 video.publish(ipfsPublish(getVideo(m)))
-            except:
-                return SetBoolResponse(False, 'Unable to publish media')
+            except Exception as e:
+                return SetBoolResponse(False, 'Unable to publish media: ' + e)
 
             return SetBoolResponse(True, thumbhash)
 
