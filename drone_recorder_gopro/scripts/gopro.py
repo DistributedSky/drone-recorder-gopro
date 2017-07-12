@@ -74,7 +74,7 @@ if __name__ == '__main__':
 
             thumbhash = ''
             try:
-                m = medias()[-1]
+                m = list(medias())[-1]
                 msg = String()
 
                 thumbhash = ipfsPublish(getThumb(m))
