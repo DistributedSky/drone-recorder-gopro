@@ -20,6 +20,7 @@ def medias():
     media = json.loads(urlopen(url).read())
     for m in media['media']:
         for n in m['fs']:
+            rospy.loginfo('Acuired media {0}'.format(m['d']))
             yield '{0}/{1}'.format(m['d'], n)
 
 def getVideo(media):
@@ -56,11 +57,6 @@ if __name__ == '__main__':
     thumbnail = rospy.Publisher('camera/thumbnail', String)
     video = rospy.Publisher('camera/video', String)
     
-    def publish_media():
-        m = medias()[-1]
-        thumbnail.publish(ipfsPublish(getThumb(m)))
-        video.publish(ipfsPublish(getVideo(m)))
-
     def handle_record(msg):
         if msg.data:
             # Start recording the video
@@ -73,11 +69,19 @@ if __name__ == '__main__':
             # Stop recording and publish thumbnail & video files
             try:
                 recording(False)
-                thread = Thread(target=publish_media)
-                thread.start()
-                return SetBoolResponse(True)
             except:
                 return SetBoolResponse(False, 'Unable to stop recording')
+
+            thumbhash = ''
+            try:
+                m = medias()[-1]
+                thumbhash = ipfsPublish(getThumb(m))
+                thumbnail.publish(thumbhash)
+                video.publish(ipfsPublish(getVideo(m)))
+            except:
+                return SetBoolResponse(False, 'Unable to publish media')
+
+            return SetBoolResponse(True, thumbhash)
 
     rospy.Service('camera/record', SetBool, handle_record)
     rospy.spin()
