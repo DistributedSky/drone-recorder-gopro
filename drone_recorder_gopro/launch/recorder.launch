@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-    <node name="drone_recorder" pkg="drone_recorder_gopro" type="gopro.py" output="screen" />
+    <group ns="$(env ADAPTER)">
+        <node name="drone_recorder" pkg="drone_recorder_gopro" type="gopro.py" output="screen" />
+    </group>
 </launch>
