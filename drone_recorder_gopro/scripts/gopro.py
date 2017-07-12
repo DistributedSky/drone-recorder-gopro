@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import rospy, json, ipfsapi
 from goprohero import GoProHero
+from std_msgs.msg import String
+from std_srvs.srv import SetBool, SetBoolResponse
 
 urlopen = lambda x: x
 try:
