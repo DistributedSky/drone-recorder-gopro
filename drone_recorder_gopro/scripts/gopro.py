@@ -21,7 +21,7 @@ def medias():
     for m in media['media']:
         for n in m['fs']:
             rospy.loginfo('Acuired media {0}'.format(m['d']))
-            yield '{0}/{1}'.format(m['d'], n)
+            yield '{0}/{1}'.format(m['d'], n['n'])
 
 def getVideo(media):
     '''
@@ -41,7 +41,7 @@ def getThumb(media):
 
 def recording(enable):
     rospy.loginfo('Set video enable {0}'.format(enable))
-    camera = GoProHero(password='password')
+    camera = GoProHero(password='fotokubgopro')
     camera.command('record', 'on' if enable else 'off')
 
 def ipfsPublish(data):
@@ -77,9 +77,9 @@ if __name__ == '__main__':
                 m = list(medias())[-1]
                 msg = String()
 
-                thumbhash = ipfsPublish(getThumb(m))
-                msg.data = thumbhash
-                thumbnail.publish(msg)
+                #thumbhash = ipfsPublish(getThumb(m))
+                #msg.data = thumbhash
+                #thumbnail.publish(msg)
 
                 videohash = ipfsPublish(getVideo(m))
                 msg.data = videohash
