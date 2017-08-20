@@ -4,6 +4,15 @@
 
 Включение записи
 
+def recording(enable):
+
+    rospy.loginfo('Set video enable {0}'.format(enable))
+
+    camera = GoProHero(password='fotokubgopro')
+    
+    camera.command('record', 'on' if enable else 'off')
+
+
 Выключение записи
 
 Скачивание записи локально
