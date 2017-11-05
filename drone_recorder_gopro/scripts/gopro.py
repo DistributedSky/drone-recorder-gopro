@@ -3,11 +3,11 @@ import rospy, json, ipfsapi
 from goprohero import GoProHero
 from std_msgs.msg import String
 from std_srvs.srv import SetBool, SetBoolResponse
-
+import time
 urlopen = lambda x: x
 try:
-    import urllib2
-    urlopen = urllib2.urlopen
+     import urllib2
+     urlopen = urllib2.urlopen
 except:
     import urllib.request
     urlopen = urllib.request.urlopen
@@ -23,13 +23,26 @@ def medias():
             rospy.loginfo('Acuired media {0}'.format(m['d']))
             yield '{0}/{1}'.format(m['d'], n['n'])
 
+#def medias():
+#    url ='http://10.5.5.9:8080/gp/gpMediaList'
+#    media = json.loads(urlopen(url).read())
+#    for m in media['media']:
+#        for n in m['fs']:
+#            print('Acuired media {0}'.format(m['d']))
+#            lastfile = '{0}/{1}'.format(m['d'], n['n'])
+#    return lastfile
+
 def getVideo(media):
     '''
         Get video by GoPro
     '''
     rospy.loginfo('Get video of {0}'.format(media))
     url = 'http://10.5.5.9:8080/videos/DCIM/{0}'.format(media)
-    return urlopen(url).read()
+    video = urlopen(url)
+    filename = 'test.mp4'
+    with open(filename,'wb') as output:
+        output.write(video.read())
+    return filename
 
 def getThumb(media):
     '''
@@ -42,6 +55,12 @@ def getThumb(media):
 def recording(enable):
     rospy.loginfo('Set video enable {0}'.format(enable))
     camera = GoProHero(password='fotokubgopro')
+    try:
+       if enable:
+         urlopen('http://10.5.5.9/gp/gpControl/command/storage/delete/all').read()
+         time.sleep(5)
+    except:
+       rospy.loginfo('FORMATTING FAIL')
     camera.command('record', 'on' if enable else 'off')
 
 def ipfsPublish(data):
@@ -49,7 +68,7 @@ def ipfsPublish(data):
         Publish bytes by IPFS client
     '''
     rospy.loginfo('IPFS publish data length {0}'.format(len(data)))
-    return ipfsapi.connect('127.0.0.1', 5001).add_bytes(data)
+    return ipfsapi.connect('127.0.0.1', 5001).add(data)['Hash']
 
 if __name__ == '__main__':
     rospy.init_node('drone_recorder_gopro')
@@ -74,6 +93,7 @@ if __name__ == '__main__':
 
             thumbhash = ''
             try:
+                time.sleep(2)
                 m = list(medias())[-1]
                 msg = String()
 
@@ -87,7 +107,7 @@ if __name__ == '__main__':
             except Exception as e:
                 return SetBoolResponse(False, 'Unable to publish media: {0}'.format(e))
 
-            return SetBoolResponse(True, thumbhash)
+            return SetBoolResponse(True, videohash)
 
     rospy.Service('camera/record', SetBool, handle_record)
     rospy.spin()
