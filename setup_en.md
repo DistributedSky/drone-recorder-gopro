@@ -35,7 +35,7 @@ mkdir drone-recorder-gopro
 git clone git@github.com:DroneEmployee/drone-recorder-gopro.git
 ```
 
-And further it is necessary to build the container in `` `Docker```
+And further it is necessary to build the container in ```Docker```
 
 ```Bash
 docker build -t DroneEmployee/drone-recorder-gopro:armfh .
@@ -52,4 +52,4 @@ droneemployee/drone-recorder-gopro     armhf               b743a3fc1560        2
 
 ```
 
-Next, you need to update the page in the browser and you will be able to add the GoPro camera to `` `drone-master-messenger```.
+Next, you need to update the page in the browser and you will be able to add the GoPro camera to ```drone-master-messenger```.
