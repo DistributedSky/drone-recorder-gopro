@@ -1,7 +1,7 @@
-FROM ros:kinetic-ros-base
+FROM droneemployee/ros-base-armhf 
 
-RUN apt-get update && apt-get install -y linux-firmware wpasupplicant dhcpcd5 wget sudo python-yaml python-pip libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev && pip install ipfsapi goprohero
-RUN wget --no-check-certificate -O - -q https://dist.ipfs.io/ipfs-update/v1.5.2/ipfs-update_v1.5.2_linux-amd64.tar.gz | tar xzv ipfs-update && ./ipfs-update/ipfs-update install latest 
+RUN apt-get update && apt-get install -y linux-firmware wpasupplicant dhcpcd5 wget sudo python-yaml python-pip libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev && pip install -U pip && pip install -U setuptools &&  pip install ipfsapi goprohero
+RUN wget --no-check-certificate -O - -q https://dist.ipfs.io/go-ipfs/v0.4.10/go-ipfs_v0.4.10_linux-arm.tar.gz | tar xzv go-ipfs/ipfs && mv go-ipfs/ipfs /usr/bin/ipfs
 
 ADD ./drone_recorder_gopro /tmp/build/src/drone_recorder_gopro
 RUN . /opt/ros/kinetic/setup.sh \
