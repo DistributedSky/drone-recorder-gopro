@@ -1,5 +1,6 @@
 # Building Drone Recorder GoPRO container
-###Recommendations:
+
+### Recommendations:
 
 This software is used on Raspberry PI ```ARM``` hardware platform and works directly with the GoPro camera. Currently Hero 3+ and Hero 4 models of this camera are recommended.
 
@@ -25,7 +26,7 @@ sudo apt-get install git-core
 
 These packages are sufficient to install this product.
 
-###Stages of the project building:
+### Stages of the project building:
 
 Initially, you need to clone files from the repository:
 
